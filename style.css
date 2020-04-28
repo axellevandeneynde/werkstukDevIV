@@ -1,0 +1,15 @@
+.item{
+    border: 1px solid black;
+    margin: 5px 0; 
+}
+
+.tabList{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start; 
+    width: 50%;
+}
+
+.tab{
+    margin: 0 5px;
+}
