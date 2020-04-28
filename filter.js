@@ -1,10 +1,14 @@
+'use strict'
+
 $(function () {
+
     // create doelgroep tabs
     const doelgroepen = ['volwassenen', 'familie'];
 
     doelgroepen.forEach(function(e){
         newTab(e, "#doelgroepTabs");
     })
+
     // create genre tabs
     const genres = ['comedy','concert','theater','multidisciplinair','literatuur','dans','muziektheater','figurentheater','circus','opera'];
     
@@ -13,13 +17,16 @@ $(function () {
     })
 
     // keep track of selected doelgroepen
-
+    
     let displayedDoelgroepen = [];
 
     //keep track of selected genres
     let displayedGenres = [];
 
-    $.getJSON( './data.json', function( data ){  //asynchronus 
+    const data = $.getJSON( './data.json');
+    
+
+    data.then(function(data){  // executed when data is loaded
         for(let i = 0; i < data.length; i++){ // forEach not working because of naming object keys
             const title = data[i].name;
             const genre = nameGenre(data[i]['genre-v2']);
@@ -29,35 +36,46 @@ $(function () {
         $('#genreTabs').on('click','.tab', function(){
             const selectedGenre = $(this).attr('id');
             updateGenres(selectedGenre);
-            showSelectedItems();
+            try{showSelectedItems()}catch(err){  //is there an error??
+                console.log('showSelectedItemd' + err);
+            }
         })
         $('#doelgroepTabs').on('click','.tab', function(){ 
             const selectedDoelgroep = $(this).attr('id');
             updateDoelgroep(selectedDoelgroep);
             showSelectedItems();
         })
+    });
 
-    })
+
 // show double filtered items
 function showSelectedItems(){
-    if(displayedDoelgroepen.length == 0 && displayedGenres.length == 0){  //nothing selected
+    //nothing selected
+    if(displayedDoelgroepen.length == 0 && displayedGenres.length == 0){
         $('.item').show();
     }
-    else if(displayedDoelgroepen.length == 0) { // only genre selected
+
+    // only genre selected
+    else if(displayedDoelgroepen.length == 0) { 
         $('.item').hide();
     for (var i = 0; i < displayedGenres.length; i++){
         $('.' + displayedGenres[i]).show();
-    }}else if(displayedGenres.length == 0){  //only doelgroep slected
+    }}
+    
+    //only doelgroep selected
+    else if(displayedGenres.length == 0){  
         $('.item').hide();
         for (var i = 0; i < displayedDoelgroepen.length; i++){
         $('.' + displayedDoelgroepen[i]).show();
-    }}else{ // select items with two classes
-        $('.item').hide(); 
-        for (var i = 0; i < displayedDoelgroepen.length; i++){
-            for (var y = 0; y < displayedGenres.length; y++){
-                const selector = "." + displayedDoelgroepen[i] + "." + displayedGenres[y];
-                console.log(selector);
-                $(selector).show();
+        }}
+    
+    // select items with two classes
+    else{ 
+    $('.item').hide(); 
+    for (var i = 0; i < displayedDoelgroepen.length; i++){
+        for (var y = 0; y < displayedGenres.length; y++){
+            const selector = "." + displayedDoelgroepen[i] + "." + displayedGenres[y];
+            $(selector).show();
             }
         }
     }
@@ -68,9 +86,9 @@ function showSelectedItems(){
  function updateDoelgroep(selected){
     const isActive = checkIfTabActive(displayedDoelgroepen, selected);
     if(isActive){
-        deactivateDoelgroep(selected)
+        deactivate(selected, "doelgroep")
     } else{
-        activateDoelgroep(selected)
+        activate(selected, "doelgroep")
     }
  }
 
@@ -79,9 +97,9 @@ function showSelectedItems(){
 function updateGenres(selectedGenre){
     const isActive = checkIfTabActive(displayedGenres, selectedGenre);
     if(isActive){
-        deactivateGenre(selectedGenre)
+        deactivate(selectedGenre, 'genre')
     }else{
-        activateGenre(selectedGenre)
+        activate(selectedGenre, 'genre')
     }
 }
 
@@ -97,25 +115,25 @@ function checkIfTabActive(array, toCheck){
     return false;
 }
 
-// change actiavted status tab
-function deactivateGenre(selected){
-    _.pull(displayedGenres, selected);
-    setColor(selected, false);
-}
-
-function activateGenre(selected){
-    displayedGenres.push(selected);
+// change activated status tab
+function activate(selected, category ){
+    if(category == 'genre'){
+        displayedGenres.push(selected);
+    }
+    if(category == 'doelgroep'){
+        displayedDoelgroepen.push(selected);
+    }
     setColor(selected, true);
 }
 
-function deactivateDoelgroep(selected){
-    _.pull(displayedDoelgroepen, selected);
+function deactivate(selected, category){
+    if(category == 'genre'){
+        _.pull(displayedGenres, selected);
+    }
+    if(category == 'doelgroep'){
+        _.pull(displayedDoelgroepen, selected);
+    }
     setColor(selected, false);
-}
-
-function activateDoelgroep(selected){
-    displayedDoelgroepen.push(selected);
-    setColor(selected, true);
 }
 
 function setColor(selected, active){
