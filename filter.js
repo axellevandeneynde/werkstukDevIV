@@ -1,6 +1,6 @@
 'use strict'
 
-$(function () {
+$(function () { // wait on document load
 
     // create doelgroep tabs
     const doelgroepen = ['volwassenen', 'familie'];
@@ -50,7 +50,7 @@ $(function () {
     });
 
 
-// show double filtered items
+// show double filtered items 
 function showSelectedItems(){
     //nothing selected
     if(displayedDoelgroepen.length == 0 && displayedGenres.length == 0){
