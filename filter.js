@@ -27,12 +27,14 @@ $(function () {
     
 
     data.then(function(data){  // executed when data is loaded
+        //create divs with shows
         for(let i = 0; i < data.length; i++){ // forEach not working because of naming object keys
             const title = data[i].name;
             const genre = nameGenre(data[i]['genre-v2']);
             const doelgroep = nameDoelgroep(data[i]['category']);
             $('#listItems').append(`<div class= "item ${genre} ${doelgroep}" id="title"><h2>${title}</h2><p>${genre}, ${doelgroep}</p></div>`);
         }
+        //filter on click
         $('#genreTabs').on('click','.tab', function(){
             const selectedGenre = $(this).attr('id');
             updateGenres(selectedGenre);
