@@ -22,7 +22,7 @@ under the key 'category':
  - 'circus' is represented with id '5e85d2cb3b5ddb6ee3d03f0c',
  - 'opera' is represented with id '5e7f7942a1676ddf89b435f4'
 
- => JSON not up to date with website or missing items in JSON?
+ => JSON not up to date with website or missing items in JSON? (28/04/2020)
 
 # Development 4: Opdracht Werkstuk
 ## Short
